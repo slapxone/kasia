@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Gerontologia</h1>
+    <form id="quizForm">
+        <ol id="questionList"></ol>
+        <input type="submit" value="Sprawdź odpowiedzi">
+    </form>
+    <div id="results"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "Czym jest gerontologia?",
+                answers: ["Nauka o biologicznych przyczynach i skutkach starzenia się człowieka", "Nauka zajmująca się zjawiskami zachodzącymi od poziomu globalnego do poziomu małych grup", "Nauka badająca zachowanie i psychikę człowieka"],
+                correct: 0
+            },
+            {
+                question: "Teoria katastrofy błędów to",
+                answers: ["Teoria psychologiczna", "Teoria społeczna", "Teoria biologiczna"],
+                correct: 2
+            },
+            {
+                question: "Teorie starzenia umownie dzieli się m.in. na",
+                answers: ["Biologiczne, kulturowe", "Kulturowe, psychologiczne", "Psychologiczne, społeczne"],
+                correct: 2
+            },
+            {
+                question: "Stan funkcjonalny:",
+                answers: ["Jest wartością stałą", "Jest wartością zmienną", "Żadne z powyższych"],
+                correct: 1
+            },
+            {
+                question: "Jeden z wymiarów funkcjonalnego stanu to:",
+                answers: ["Funkcjonalna zdolność", "Funkcjonalne działanie", "Funkcjonalne przetwarzanie"],
+                correct: 0
+            },
+            {
+                question: "Czym jest kult młodości?",
+                answers: ["Okres przejściowy w życiu młodego człowieka", "Wyznawanie zasad i postaw z okresu życia nastoletniego", "Unikanie problemów starości, zamiast mierzenia się z nimi"],
+                correct: 2
+            },
+            {
+                question: "Strategie zorientowane na emocje to:",
+                answers: ["Strategie afektywne i funkcjonalne", "Strategie ucieczki i afektywne", "Strategie funkcjonalne i ucieczki "],
+                correct: 1
+            },
+            {
+                question: "Który skrót odpowiada za nazwę organizacji odpowiedzialnej za wyodrębnienie trzech wymiarów naruszenia sprawności?",
+                answers: ["WHO", "ICF", "ICIDH"],
+                correct: 0
+            },
+            {
+                question: "Teoria zużycia to:",
+                answers: ["Teoria psychologiczna ", "Teoria biologiczna", "Teoria społeczna"],
+                correct: 1
+            },
+            {
+                question: "Teoria wiązań krzyżowych:",
+                answers: ["Kumulujące się z wiekiem uszkodzenia na poziomie komórek prowadza do ich zużycia, śmierci a następnie śmierci całego organizmu ", "Wskazuje błędy i mutacje podczas podziałów komórek w kodzie DNA", "Wskutek powstawania nieprawidłowych połączeń w obrębie dna dochodzi do jego usztywnienia strukturalnego a w następstwie do jego degeneracji "],
+                correct: 2
+            },
+            {
+                question: "Starzenie pomyślne:",
+                answers: ["Wiąże się z niewielkimi niekorzystnymi zmianami w zakresie zdrowia i sprawności ", "Przebiega jako proces fizjologiczny bez powikłań chorobowych", "Odnosi się do połączonych skutków procesu starzenia się w jego biegu naturalnym i patologicznym "],
+                correct: 1
+            },
+            {
+                question: "Zewnętrzny czynnik mający wpływ na proces starzenia się:",
+                answers: ["Uwarunkowania genetyczne", "Dieta", "Obydwie odpowiedzi są prawidłowe"],
+                correct: 2
+            },
+        ];
+
+        const quizForm = document.getElementById('quizForm');
+        const questionList = document.getElementById('questionList');
+        const results = document.getElementById('results');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function buildQuiz() {
+            shuffleArray(questions);
+            questions.forEach((question, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<p>${question.question}</p>`;
+                for (let i = 0; i < question.answers.length; i++) {
+                    listItem.innerHTML += `<label><input type="radio" name="q${index}" value="${i}">${question.answers[i]}</label><br>`;
+                }
+                questionList.appendChild(listItem);
+            });
+        }
+
+        function showResults() {
+            const answerContainers = questionList.getElementsByTagName('li');
+            let correctAnswers = 0;
+            let incorrectAnswers = 0;
+
+            for (let i = 0; i < questions.length; i++) {
+                const answerContainer = answerContainers[i];
+                const question = questions[i];
+                const selector = `input[name=q${i}]:checked`;
+                const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+                
+                if (userAnswer == question.correct) {
+                    answerContainer.className = 'correct';
+                    correctAnswers++;
+                } else {
+                    answerContainer.className = 'incorrect';
+                    incorrectAnswers++;
+                }
+            }
+
+            results.innerHTML = `Poprawne odpowiedzi: ${correctAnswers}<br>Błędne odpowiedzi: ${incorrectAnswers}`;
+        }
+
+        buildQuiz();
+
+        quizForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            showResults();
+        });
+    </script>
+</body>
+</html>
